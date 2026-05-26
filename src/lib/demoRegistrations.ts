@@ -17,25 +17,19 @@ export type DemoRegistration = DemoRegistrationInput & {
 const VALID_EXPERIENCE = new Set(["beginner", "intermediate", "advanced"]);
 
 function createPoolConfig(): PoolConfig {
-  if (!process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL) {
     return {
-      host: process.env.POSTGRES_HOST || "localhost",
-      port: Number(process.env.POSTGRES_PORT || 5432),
-      user: process.env.POSTGRES_USER || "postgres",
-      password: process.env.POSTGRES_PASSWORD || "",
-      database: process.env.POSTGRES_DATABASE || "nexa",
+      connectionString: process.env.DATABASE_URL,
       max: 10,
     };
   }
 
-  const databaseUrl = new URL(process.env.DATABASE_URL);
-
   return {
-    host: databaseUrl.hostname || "localhost",
-    port: Number(databaseUrl.port || 5432),
-    user: decodeURIComponent(databaseUrl.username || "postgres"),
-    password: decodeURIComponent(databaseUrl.password || ""),
-    database: databaseUrl.pathname.replace(/^\//, "") || "nexa",
+    host: process.env.POSTGRES_HOST || "localhost",
+    port: Number(process.env.POSTGRES_PORT || 5432),
+    user: process.env.POSTGRES_USER || "postgres",
+    password: process.env.POSTGRES_PASSWORD || "",
+    database: process.env.POSTGRES_DATABASE || "nexa",
     max: 10,
   };
 }
