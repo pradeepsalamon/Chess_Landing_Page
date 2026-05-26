@@ -11,6 +11,20 @@ const validationMessages = new Set([
   'Contact number must be exactly 10 digits.',
 ]);
 
+function logServerError(context: string, error: unknown) {
+  if (error instanceof Error) {
+    console.error(context, {
+      name: error.name,
+      message: error.message,
+      code: 'code' in error ? error.code : undefined,
+      stack: error.stack,
+    });
+    return;
+  }
+
+  console.error(context, error);
+}
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -18,7 +32,7 @@ export async function POST(request: Request) {
     const registration = await saveDemoRegistration(registrationInput);
 
     const emailSent = await sendDemoRegistrationEmail(registration).catch((error) => {
-      console.error('Error sending admin email:', error);
+      logServerError('Error sending admin email', error);
       return false;
     });
 
@@ -27,7 +41,7 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error('Error saving registration:', error);
+    logServerError('Error saving registration', error);
     const message = error instanceof Error ? error.message : 'Failed to process registration';
     const isValidationError = validationMessages.has(message);
 
