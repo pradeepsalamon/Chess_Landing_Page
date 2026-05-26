@@ -21,6 +21,13 @@ function createPoolConfig(): PoolConfig {
     throw new Error("DATABASE_URL is required.");
   }
 
+  const databaseUrl = new URL(process.env.DATABASE_URL);
+  const isLocalDatabaseHost = ["localhost", "127.0.0.1", "::1"].includes(databaseUrl.hostname);
+
+  if (process.env.VERCEL === "1" && isLocalDatabaseHost) {
+    throw new Error("DATABASE_URL cannot point to localhost on Vercel. Use a hosted PostgreSQL connection URL.");
+  }
+
   return {
     connectionString: process.env.DATABASE_URL,
     max: 10,
