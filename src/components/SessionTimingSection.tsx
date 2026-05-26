@@ -80,7 +80,6 @@ export default function SessionTimingSection() {
                   className="absolute w-0.5 h-3 bg-gold/30 left-1/2 -translate-x-1/2"
                   style={{
                     top: "4px",
-                    transformOrigin: "50% calc(50vmin - 4px)",
                     transform: `translateX(-50%) rotate(${i * 30}deg)`,
                     transformOrigin: `center ${128}px`,
                   }}

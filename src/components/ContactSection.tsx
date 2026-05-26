@@ -3,6 +3,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@grandmasterchess.com";
+
 const contactMethods = [
   {
     icon: "📱",
@@ -23,8 +25,8 @@ const contactMethods = [
   {
     icon: "✉️",
     label: "Email",
-    value: "info@grandmasterchess.com",
-    href: "mailto:info@grandmasterchess.com",
+    value: contactEmail,
+    href: `mailto:${contactEmail}`,
     color: "from-gold/20 to-gold-dark/5",
     borderHover: "hover:border-gold/30",
   },

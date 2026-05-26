@@ -19,6 +19,13 @@ export default function DemoClassSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const phone = formData.phone.replace(/\D/g, "");
+
+    if (!/^\d{10}$/.test(phone)) {
+      setError("Contact number must be exactly 10 digits.");
+      return;
+    }
+
     setIsSubmitting(true);
     setError("");
 
@@ -28,10 +35,13 @@ export default function DemoClassSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, phone }),
       });
 
-      if (!res.ok) throw new Error("Failed to submit");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || "Failed to submit");
+      }
 
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 4000);
@@ -177,10 +187,16 @@ export default function DemoClassSection() {
                     <input
                       type="tel"
                       required
+                      inputMode="numeric"
+                      pattern="[0-9]{10}"
+                      maxLength={10}
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) => {
+                        const phone = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        setFormData({ ...formData, phone });
+                      }}
                       className="w-full px-4 py-3 rounded-xl bg-dark border border-dark-border focus:border-gold/40 text-text-primary placeholder:text-text-muted/50 outline-none transition-all duration-300 text-sm"
-                      placeholder="+91 XXXXX XXXXX"
+                      placeholder="10 digit contact number"
                     />
                   </div>
 

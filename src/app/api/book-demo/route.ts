@@ -1,37 +1,39 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { sendDemoRegistrationEmail } from '@/lib/adminEmail';
+import { saveDemoRegistration, validateDemoRegistration } from '@/lib/demoRegistrations';
+
+export const runtime = 'nodejs';
+
+const validationMessages = new Set([
+  'All fields are required.',
+  'Student age must be between 4 and 18.',
+  'Please select a valid experience level.',
+  'Contact number must be exactly 10 digits.',
+]);
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    
-    // Create timestamps
-    const now = new Date();
-    const dateString = now.toISOString().split('T')[0]; // YYYY-MM-DD
-    const timeString = now.toTimeString().split(' ')[0]; // HH:MM:SS
-    
-    // Add timestamps to data
-    const registrationData = {
-      ...data,
-      registeredDate: dateString,
-      registeredTime: timeString,
-      fullTimestamp: now.toISOString()
-    };
-    
-    // Define directory and file paths
-    const dataDir = path.join(process.cwd(), 'data', 'demo-registrations');
-    const filePath = path.join(dataDir, `registrations_${dateString}.jsonl`);
-    
-    // Ensure directory exists
-    await fs.mkdir(dataDir, { recursive: true });
-    
-    // Append to file (JSON Lines format: one JSON object per line)
-    await fs.appendFile(filePath, JSON.stringify(registrationData) + '\n', 'utf8');
-    
-    return NextResponse.json({ success: true, message: 'Registration successful' }, { status: 201 });
+    const registrationInput = validateDemoRegistration(data);
+    const registration = await saveDemoRegistration(registrationInput);
+
+    const emailSent = await sendDemoRegistrationEmail(registration).catch((error) => {
+      console.error('Error sending admin email:', error);
+      return false;
+    });
+
+    return NextResponse.json(
+      { success: true, message: 'Registration successful', emailSent },
+      { status: 201 },
+    );
   } catch (error) {
     console.error('Error saving registration:', error);
-    return NextResponse.json({ success: false, error: 'Failed to process registration' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Failed to process registration';
+    const isValidationError = validationMessages.has(message);
+
+    return NextResponse.json(
+      { success: false, error: isValidationError ? message : 'Failed to process registration' },
+      { status: isValidationError ? 400 : 500 },
+    );
   }
 }

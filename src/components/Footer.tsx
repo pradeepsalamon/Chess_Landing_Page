@@ -18,6 +18,8 @@ const programs = [
   { label: "Sunday Training", href: "#sunday-training" },
 ];
 
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@grandmasterchess.com";
+
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden">
@@ -109,7 +111,9 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3 text-sm text-text-secondary">
                 <span className="text-gold mt-0.5">✉️</span>
-                info@grandmasterchess.com
+                <a href={`mailto:${contactEmail}`} className="hover:text-gold transition-colors">
+                  {contactEmail}
+                </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-text-secondary">
                 <span className="text-gold mt-0.5">🌐</span>
