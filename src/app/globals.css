@@ -22,14 +22,14 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f0f0f0;
+  background: #06070c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a3a52;
+  background: #f7c968;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2a5a8a;
+  background: #45d6a2;
 }
 
 html {
@@ -37,7 +37,7 @@ html {
 }
 
 body {
-  background: #fff8e6;
+  background: #030303;
   color: var(--color-text-primary);
   overflow-x: hidden;
 }
@@ -237,4 +237,197 @@ body {
   border-radius: 50%;
   opacity: 0.3;
   pointer-events: none;
+}
+
+/* Scroll-driven 3D landing theme */
+.scene-backed-landing {
+  --color-gold: #f7c968;
+  --color-gold-light: #ffe7a6;
+  --color-gold-dark: #9a6425;
+  --color-dark: rgba(6, 7, 12, 0.72);
+  --color-dark-card: rgba(11, 13, 20, 0.64);
+  --color-dark-lighter: rgba(22, 24, 33, 0.62);
+  --color-dark-border: rgba(247, 201, 104, 0.2);
+  --color-neon-gold: #f7c968;
+  --color-neon-glow: rgba(247, 201, 104, 0.34);
+  --color-glass: rgba(8, 10, 16, 0.5);
+  --color-glass-border: rgba(247, 201, 104, 0.18);
+  --color-text-primary: #fff4d4;
+  --color-text-secondary: #d9c89d;
+  --color-text-muted: #a99d82;
+  --scene-surface: rgba(8, 10, 16, 0.58);
+  --scene-surface-strong: rgba(9, 11, 18, 0.82);
+  --scene-border: rgba(247, 201, 104, 0.2);
+  --scene-emerald: #45d6a2;
+  color: var(--color-text-primary);
+  background:
+    linear-gradient(180deg, rgba(3, 3, 3, 0.12), rgba(3, 3, 3, 0.36)),
+    transparent;
+}
+
+.scene-backed-landing section,
+.scene-backed-landing footer {
+  background: transparent !important;
+}
+
+.scene-backed-landing section[id] > .absolute.inset-0[class*="bg-"],
+.scene-backed-landing section[id] > .absolute.inset-0 > .absolute.inset-0[class*="bg-"],
+.scene-backed-landing footer > .absolute.inset-0[class*="bg-"],
+.scene-backed-landing [class~="bg-[#fff8e6]"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.scene-backed-landing .bg-white,
+.scene-backed-landing .bg-dark,
+.scene-backed-landing .bg-dark-card,
+.scene-backed-landing [class*="from-blue-50"],
+.scene-backed-landing [class*="to-blue-100"] {
+  background-color: var(--scene-surface) !important;
+  background-image: none !important;
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+.scene-backed-landing .glass {
+  background: var(--scene-surface) !important;
+  border-color: var(--scene-border) !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+}
+
+.scene-backed-landing .glass-strong {
+  background: var(--scene-surface-strong) !important;
+  border-color: rgba(247, 201, 104, 0.26) !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+.scene-backed-landing .border-dark-border,
+.scene-backed-landing .border-blue-200,
+.scene-backed-landing .border-blue-300 {
+  border-color: var(--scene-border) !important;
+}
+
+.scene-backed-landing .hover\:border-blue-400:hover,
+.scene-backed-landing .hover\:border-blue-500\/30:hover {
+  border-color: rgba(69, 214, 162, 0.42) !important;
+}
+
+.scene-backed-landing [class~="text-[#1a3a52]"] {
+  color: var(--color-gold-light) !important;
+}
+
+.scene-backed-landing .text-blue-600,
+.scene-backed-landing [class~="text-[#2a6a9a]"] {
+  color: var(--scene-emerald) !important;
+}
+
+.scene-backed-landing [class~="text-[#4a5f7f]"],
+.scene-backed-landing [class~="text-[#7a8fa5]"],
+.scene-backed-landing .text-dark-600,
+.scene-backed-landing .text-dark-500 {
+  color: var(--color-text-secondary) !important;
+}
+
+.scene-backed-landing .text-dark-900,
+.scene-backed-landing .text-text-primary {
+  color: var(--color-text-primary) !important;
+}
+
+.scene-backed-landing [class~="bg-[#1a3a52]"] {
+  background-color: var(--color-gold) !important;
+}
+
+.scene-backed-landing [class~="bg-[#1a3a52]/[0.04]"] {
+  background-color: rgba(247, 201, 104, 0.06) !important;
+}
+
+.scene-backed-landing [class~="bg-[#1a3a52]/[0.02]"] {
+  background-color: rgba(247, 201, 104, 0.04) !important;
+}
+
+.scene-backed-landing [class~="bg-[#1a3a52]/40"] {
+  background-color: rgba(247, 201, 104, 0.32) !important;
+}
+
+.scene-backed-landing [class~="bg-[#2a5a8a]/[0.03]"] {
+  background-color: rgba(69, 214, 162, 0.05) !important;
+}
+
+.scene-backed-landing [class*="border-[#1a3a52]"] {
+  border-color: rgba(247, 201, 104, 0.36) !important;
+}
+
+.scene-backed-landing [class~="text-[#1a3a52]/[0.08]"] {
+  color: rgba(247, 201, 104, 0.09) !important;
+}
+
+.scene-backed-landing [class*="via-[#1a3a52]"] {
+  --tw-gradient-via: rgba(247, 201, 104, 0.72) !important;
+}
+
+.scene-backed-landing .gold-text,
+.scene-backed-landing .gold-text-bright {
+  background: linear-gradient(135deg, #fff3bf, #f7c968 48%, #45d6a2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.scene-backed-landing .blue-glow {
+  text-shadow:
+    0 0 20px rgba(247, 201, 104, 0.24),
+    0 0 48px rgba(69, 214, 162, 0.18);
+}
+
+.scene-backed-landing .btn-gold,
+.scene-backed-landing .bg-blue-600 {
+  background: linear-gradient(135deg, #f7c968, #45d6a2) !important;
+  color: #050507 !important;
+  box-shadow: 0 16px 40px rgba(247, 201, 104, 0.18);
+}
+
+.scene-backed-landing .btn-gold:hover,
+.scene-backed-landing .hover\:bg-blue-700:hover {
+  background: linear-gradient(135deg, #ffe7a6, #66e8bb) !important;
+  box-shadow:
+    0 0 26px rgba(247, 201, 104, 0.38),
+    0 0 52px rgba(69, 214, 162, 0.18);
+}
+
+.scene-backed-landing .btn-outline-gold {
+  border-color: rgba(247, 201, 104, 0.56) !important;
+  color: var(--color-gold-light) !important;
+  background: rgba(8, 10, 16, 0.26);
+}
+
+.scene-backed-landing .btn-outline-gold:hover {
+  background: rgba(247, 201, 104, 0.12) !important;
+  box-shadow: 0 0 28px rgba(247, 201, 104, 0.22);
+}
+
+.scene-backed-landing .card-lift:hover {
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(247, 201, 104, 0.12);
+}
+
+.scene-backed-landing .chess-pattern {
+  opacity: 0.12 !important;
+}
+
+.scene-backed-landing .shadow-blue-500\/10 {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.26) !important;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
