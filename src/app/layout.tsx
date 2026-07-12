@@ -34,36 +34,27 @@ export const metadata: Metadata = {
 };
 
 const proxyFixScript = `
+  const forceVisible = () => {
+    document.querySelectorAll('[style]').forEach(el => {
+      // Framer Motion sets inline opacity to exactly "0" on initial load
+      if (el.style.opacity === '0') {
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('transform', 'none', 'important');
+      }
+    });
+  };
+
   try {
     const isProxy = window.self !== window.top || window.location.hostname.includes('ruttl');
     if (isProxy) {
-      window.IntersectionObserver = class MockObserver {
-        constructor(callback) {
-          this.callback = callback;
-        }
-        observe(element) {
-          setTimeout(() => {
-            this.callback([{ isIntersecting: true, target: element, intersectionRatio: 1 }]);
-          }, 50);
-        }
-        unobserve() {}
-        disconnect() {}
-      };
+      // Run immediately and then poll to catch any dynamic elements
+      forceVisible();
+      setInterval(forceVisible, 300);
     }
   } catch(e) {
-    // Accessing window.top from cross-origin iframe throws SecurityError
-    window.IntersectionObserver = class MockObserver {
-      constructor(callback) {
-        this.callback = callback;
-      }
-      observe(element) {
-        setTimeout(() => {
-          this.callback([{ isIntersecting: true, target: element, intersectionRatio: 1 }]);
-        }, 50);
-      }
-      unobserve() {}
-      disconnect() {}
-    };
+    // Cross-origin iframe (like Ruttl) throws SecurityError on window.top
+    forceVisible();
+    setInterval(forceVisible, 300);
   }
 `;
 
@@ -80,7 +71,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: proxyFixScript }} />
       </head>
-      <body className="min-h-screen bg-[#0a0a0f] font-[family-name:var(--font-inter)]" suppressHydrationWarning>
+      <body className="min-h-screen bg-[#0a0a0f] font-[family-name:var(--font-inter)]">
         {children}
       </body>
     </html>
