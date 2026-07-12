@@ -1,8 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-
 const timelineItems = [
   { time: "0-5 min", label: "Warm-up & Review", icon: "🧠" },
   { time: "5-20 min", label: "Core Lesson & Theory", icon: "📖" },
@@ -11,20 +8,15 @@ const timelineItems = [
 ];
 
 export default function SessionTimingSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <section className="relative py-24 sm:py-32 overflow-hidden">
       <div className="absolute inset-0 chess-pattern opacity-15" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="text-center mb-16 reveal reveal-up"
+          style={{ transitionDelay: '0s' }}
         >
           <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
             Session Structure
@@ -35,30 +27,26 @@ export default function SessionTimingSection() {
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Structured, focused, and interactive — every minute counts
           </p>
-        </motion.div>
+        </div>
 
         {/* Animated clock and timeline */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Clock visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex justify-center"
+          <div
+            className="flex justify-center reveal reveal-scale"
+            style={{ transitionDelay: '0.2s' }}
           >
             <div className="relative w-64 h-64 sm:w-80 sm:h-80">
               {/* Outer ring */}
               <div className="absolute inset-0 rounded-full border-2 border-gold/20" />
               <div className="absolute inset-2 rounded-full border border-dark-border" />
 
-              {/* Animated rotating ring */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
+              {/* Animated rotating ring (using CSS instead of framer motion) */}
+              <div
+                className="absolute inset-0 rounded-full animate-rotate-slow"
                 style={{
                   background: "conic-gradient(from 0deg, transparent 0%, rgba(212,168,67,0.3) 75%, transparent 100%)",
                 }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               />
 
               {/* Center content */}
@@ -81,22 +69,20 @@ export default function SessionTimingSection() {
                   style={{
                     top: "4px",
                     transform: `translateX(-50%) rotate(${i * 30}deg)`,
-                    transformOrigin: `center ${128}px`,
+                    transformOrigin: `center 128px`,
                   }}
                 />
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Timeline */}
           <div className="space-y-6">
             {timelineItems.map((item, i) => (
-              <motion.div
+              <div
                 key={item.label}
-                initial={{ opacity: 0, x: 40 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 + i * 0.15 }}
-                className="group flex items-center gap-5"
+                className="group flex items-center gap-5 reveal reveal-up"
+                style={{ transitionDelay: `${0.3 + i * 0.15}s` }}
               >
                 {/* Connector line */}
                 <div className="relative flex flex-col items-center">
@@ -116,22 +102,20 @@ export default function SessionTimingSection() {
                     {item.label}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
 
             {/* Extra info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="grid grid-cols-3 gap-3 mt-8"
+            <div
+              className="grid grid-cols-3 gap-3 mt-8 reveal reveal-up"
+              style={{ transitionDelay: '0.8s' }}
             >
               {["Weekly Learning", "Interactive", "Regular Practice"].map((item) => (
                 <div key={item} className="text-center p-3 rounded-xl glass border border-dark-border">
                   <span className="text-xs text-text-secondary">{item}</span>
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

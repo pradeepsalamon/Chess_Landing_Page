@@ -1,8 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@grandmasterchess.com";
 
 const contactMethods = [
@@ -39,20 +36,15 @@ const socialLinks = [
 ];
 
 export default function ContactSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <section id="contact" className="relative py-24 sm:py-32 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark-lighter/30 to-dark" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="text-center mb-16 reveal reveal-up"
+          style={{ transitionDelay: '0s' }}
         >
           <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
             Get In Touch
@@ -63,24 +55,22 @@ export default function ContactSection() {
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Reach out to us anytime — we&apos;re here to help you begin your chess journey
           </p>
-        </motion.div>
+        </div>
 
         {/* Contact cards */}
         <div className="grid sm:grid-cols-3 gap-6 mb-12">
           {contactMethods.map((method, i) => (
-            <motion.a
+            <a
               key={method.label}
               href={method.href}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-              className={`group relative p-6 rounded-2xl bg-dark-card border border-dark-border ${method.borderHover} card-lift transition-all duration-500 text-center`}
+              className={`group relative p-6 rounded-2xl bg-dark-card border border-dark-border ${method.borderHover} card-lift transition-all duration-500 text-center reveal reveal-up`}
+              style={{ transitionDelay: `${0.2 + i * 0.1}s` }}
             >
               <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               <div className="relative">
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                <div className="text-4xl mb-3 group-hover:scale-125 group-hover:rotate-6 inline-block transition-transform duration-300">
                   {method.icon}
                 </div>
                 <div className="text-sm text-text-muted uppercase tracking-wider mb-1">
@@ -90,29 +80,25 @@ export default function ContactSection() {
                   {method.value}
                 </div>
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
 
         {/* Social links */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="flex justify-center gap-4"
+        <div
+          className="flex justify-center gap-4 reveal reveal-up"
+          style={{ transitionDelay: '0.5s' }}
         >
           {socialLinks.map((social) => (
-            <motion.a
+            <a
               key={social.label}
               href={social.href}
-              className={`w-14 h-14 rounded-xl border border-dark-border flex items-center justify-center text-2xl transition-all duration-300 ${social.color}`}
-              whileHover={{ scale: 1.1, y: -4 }}
-              whileTap={{ scale: 0.95 }}
+              className={`w-14 h-14 rounded-xl border border-dark-border flex items-center justify-center text-2xl transition-all duration-300 ${social.color} hover:scale-110 hover:-translate-y-1 active:scale-95`}
             >
               {social.icon}
-            </motion.a>
+            </a>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

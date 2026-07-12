@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { useIsVisible } from "@/hooks/useIsVisible";
 
 const achievements = [
   { value: 150, suffix: "+", label: "Tournament Players", icon: "🏆" },
@@ -38,8 +38,8 @@ function AnimatedCounter({ target, suffix, isInView }: { target: number; suffix:
 }
 
 export default function SundayTrainingSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useIsVisible(ref);
 
   return (
     <section id="sunday-training" className="relative py-24 sm:py-32 overflow-hidden">
@@ -52,10 +52,9 @@ export default function SundayTrainingSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
+          <div
+            className="reveal reveal-up"
+            style={{ transitionDelay: '0s' }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-blue-500/10 text-blue-600 border border-blue-500/20 mb-4">
               Special Sunday Sessions
@@ -81,43 +80,36 @@ export default function SundayTrainingSection() {
                 "Opening Prep",
                 "Endgame Drills",
               ].map((feature, i) => (
-                <motion.div
+                <div
                   key={feature}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-2 text-sm text-dark-600"
+                  className="flex items-center gap-2 text-sm text-dark-600 reveal reveal-up"
+                  style={{ transitionDelay: `${0.3 + i * 0.1}s` }}
                 >
                   <span className="text-blue-600">♦</span>
                   {feature}
-                </motion.div>
+                </div>
               ))}
             </div>
 
-            <motion.a
+            <a
               href="#demo"
-              className="bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <span>🏆</span> Join Sunday Training
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
 
           {/* Achievement counters */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+          <div
+            className="reveal reveal-up"
+            style={{ transitionDelay: '0.2s' }}
           >
             <div className="grid grid-cols-2 gap-4">
               {achievements.map((item, i) => (
-                <motion.div
+                <div
                   key={item.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 0.4 + i * 0.1 }}
-                  className="group p-6 rounded-2xl bg-white border border-blue-200 hover:border-blue-400 hover:shadow-lg card-lift text-center transition-all"
+                  className="group p-6 rounded-2xl bg-white border border-blue-200 hover:border-blue-400 hover:shadow-lg card-lift text-center transition-all reveal reveal-scale"
+                  style={{ transitionDelay: `${0.4 + i * 0.1}s` }}
                 >
                   <div className="text-3xl mb-3 group-hover:scale-125 transition-transform duration-300">
                     {item.icon}
@@ -126,28 +118,24 @@ export default function SundayTrainingSection() {
                   <div className="text-xs text-dark-500 mt-2 uppercase tracking-wider">
                     {item.label}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             {/* Trophy visual */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 text-center"
+            <div
+              className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-300 text-center reveal reveal-up"
+              style={{ transitionDelay: '0.8s' }}
             >
-              <motion.div
-                className="text-6xl mb-2"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              <div
+                className="text-6xl mb-2 inline-block animate-float-slow"
               >
                 🏆
-              </motion.div>
+              </div>
               <div className="text-sm text-blue-600 font-semibold">Every Sunday</div>
               <div className="text-xs text-dark-500 mt-1">Competitive Tournament Practice</div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

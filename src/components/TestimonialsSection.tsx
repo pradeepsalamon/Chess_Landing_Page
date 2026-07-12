@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const testimonials = [
   {
@@ -49,8 +48,6 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -65,12 +62,10 @@ export default function TestimonialsSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-dark via-dark-lighter/30 to-dark" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="text-center mb-16 reveal reveal-up"
+          style={{ transitionDelay: '0s' }}
         >
           <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
             Testimonials
@@ -81,45 +76,49 @@ export default function TestimonialsSection() {
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Hear what our chess families have to say
           </p>
-        </motion.div>
+        </div>
 
         {/* Carousel */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto reveal reveal-up" style={{ transitionDelay: '0.2s' }}>
           <div className="relative overflow-hidden">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="p-8 sm:p-12 rounded-2xl glass-strong border border-dark-border"
-            >
-              {/* Quote mark */}
-              <div className="text-6xl gold-text opacity-30 font-serif leading-none mb-4">&ldquo;</div>
+            <div className="relative h-64 sm:h-56">
+              {testimonials.map((testimonial, i) => (
+                <div
+                  key={i}
+                  className={`absolute inset-0 p-8 sm:p-12 rounded-2xl glass-strong border border-dark-border transition-all duration-500 ease-in-out flex flex-col justify-center ${
+                    i === activeIndex
+                      ? 'opacity-100 translate-x-0'
+                      : 'opacity-0 translate-x-8 pointer-events-none'
+                  }`}
+                >
+                  {/* Quote mark */}
+                  <div className="absolute top-4 right-8 text-8xl gold-text opacity-10 font-serif leading-none">&ldquo;</div>
 
-              <p className="text-lg sm:text-xl text-text-secondary leading-relaxed mb-8 italic">
-                {testimonials[activeIndex].text}
-              </p>
+                  <p className="text-lg sm:text-xl text-text-secondary leading-relaxed mb-6 italic relative z-10 line-clamp-3">
+                    {testimonial.text}
+                  </p>
 
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-dark font-bold text-sm">
-                  {testimonials[activeIndex].initials}
-                </div>
-                <div>
-                  <div className="font-semibold text-text-primary">
-                    {testimonials[activeIndex].name}
+                  <div className="flex items-center gap-4 relative z-10 mt-auto">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-dark font-bold text-sm shrink-0">
+                      {testimonial.initials}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-text-primary">
+                        {testimonial.name}
+                      </div>
+                      <div className="text-sm text-text-muted">
+                        {testimonial.location}
+                      </div>
+                    </div>
+                    <div className="ml-auto flex gap-0.5">
+                      {Array.from({ length: testimonial.rating }).map((_, j) => (
+                        <span key={j} className="text-gold text-lg">★</span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="text-sm text-text-muted">
-                    {testimonials[activeIndex].location}
-                  </div>
                 </div>
-                <div className="ml-auto flex gap-0.5">
-                  {Array.from({ length: testimonials[activeIndex].rating }).map((_, i) => (
-                    <span key={i} className="text-gold text-lg">★</span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+              ))}
+            </div>
           </div>
 
           {/* Dots */}
@@ -133,6 +132,7 @@ export default function TestimonialsSection() {
                     ? "bg-gold w-8"
                     : "bg-dark-border hover:bg-gold/30"
                 }`}
+                aria-label={`Go to slide ${i + 1}`}
               />
             ))}
           </div>

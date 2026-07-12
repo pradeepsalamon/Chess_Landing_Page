@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { useIsVisible } from "@/hooks/useIsVisible";
 
 const stats = [
   { value: 5000, suffix: "+", label: "Students Trained", icon: "🎓" },
@@ -40,8 +40,8 @@ function Counter({ target, suffix, isInView }: { target: number; suffix: string;
 }
 
 export default function StatsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useIsVisible(ref);
 
   return (
     <section className="relative py-20 sm:py-28 overflow-hidden">
@@ -53,25 +53,22 @@ export default function StatsSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {stats.map((stat, i) => (
-            <motion.div
+            <div
               key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
-              className="text-center group"
+              className="text-center group reveal reveal-up"
+              style={{ transitionDelay: `${i * 0.15}s` }}
             >
-              <motion.div
-                className="text-4xl mb-3"
-                whileHover={{ scale: 1.3, rotate: 10 }}
-                transition={{ type: "spring", stiffness: 400 }}
+              <div
+                className="text-4xl mb-3 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 inline-block"
               >
                 {stat.icon}
-              </motion.div>
+              </div>
+              <br />
               <Counter target={stat.value} suffix={stat.suffix} isInView={isInView} />
               <div className="text-xs sm:text-sm text-text-muted mt-2 uppercase tracking-wider">
                 {stat.label}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

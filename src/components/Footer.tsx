@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 const quickLinks = [
   { label: "Home", href: "#home" },
   { label: "Programs", href: "#programs" },
@@ -33,7 +31,7 @@ export default function Footer() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-4 gap-10">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 reveal reveal-up" style={{ transitionDelay: '0s' }}>
             <div className="flex items-center gap-3 mb-4">
               <img 
                 src="/nexa-logo.svg" 
@@ -51,7 +49,7 @@ export default function Footer() {
                 <a
                   key={i}
                   href="#"
-                  className="w-9 h-9 rounded-lg border border-dark-border hover:border-gold/30 flex items-center justify-center text-base transition-all duration-300 hover:bg-gold/5"
+                  className="w-9 h-9 rounded-lg border border-dark-border hover:border-gold/30 flex items-center justify-center text-base transition-all duration-300 hover:bg-gold/5 hover:scale-110 active:scale-95"
                 >
                   {icon}
                 </a>
@@ -60,7 +58,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="reveal reveal-up" style={{ transitionDelay: '0.1s' }}>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-text-primary mb-4">
               Quick Links
             </h4>
@@ -69,9 +67,9 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-text-secondary hover:text-gold transition-colors duration-300 flex items-center gap-2"
+                    className="text-sm text-text-secondary hover:text-gold transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="text-gold/40 text-xs">›</span>
+                    <span className="text-gold/40 text-xs transition-transform duration-300 group-hover:translate-x-1">›</span>
                     {link.label}
                   </a>
                 </li>
@@ -80,7 +78,7 @@ export default function Footer() {
           </div>
 
           {/* Programs */}
-          <div>
+          <div className="reveal reveal-up" style={{ transitionDelay: '0.2s' }}>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-text-primary mb-4">
               Programs
             </h4>
@@ -89,9 +87,9 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-text-secondary hover:text-gold transition-colors duration-300 flex items-center gap-2"
+                    className="text-sm text-text-secondary hover:text-gold transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="text-gold/40 text-xs">›</span>
+                    <span className="text-gold/40 text-xs transition-transform duration-300 group-hover:translate-x-1">›</span>
                     {link.label}
                   </a>
                 </li>
@@ -100,7 +98,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="reveal reveal-up" style={{ transitionDelay: '0.3s' }}>
             <h4 className="text-sm font-semibold uppercase tracking-wider text-text-primary mb-4">
               Contact Info
             </h4>
@@ -124,7 +122,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 pt-8 border-t border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4 reveal reveal-up" style={{ transitionDelay: '0.4s' }}>
           <p className="text-xs text-text-muted">
             © {new Date().getFullYear()} GrandMaster Chess Academy. All Rights Reserved.
           </p>

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface Registration {
   name: string;
@@ -86,10 +85,8 @@ export default function AdminDashboard() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#f5f1e8] flex items-center justify-center p-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-white p-8 rounded-xl border border-[#d8c49a] shadow-xl"
+        <div 
+          className="w-full max-w-md bg-white p-8 rounded-xl border border-[#d8c49a] shadow-xl animate-[float_0.5s_ease-out_forwards]"
         >
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#24180d] mb-2">Admin Access</h1>
@@ -112,7 +109,7 @@ export default function AdminDashboard() {
               {loading ? 'Checking...' : 'Login to Dashboard'}
             </button>
           </form>
-        </motion.div>
+        </div>
       </div>
     );
   }
@@ -154,43 +151,38 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#eadfca]">
-                  <AnimatePresence>
-                    {registrations.length > 0 ? (
-                      registrations.map((reg, index) => (
-                        <motion.tr 
-                          key={reg.fullTimestamp}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="odd:bg-white even:bg-[#fbf8f0] hover:bg-[#fff0c7] transition-colors"
-                        >
-                          <td className="p-4 font-semibold text-[#1c1710]">{reg.name}</td>
-                          <td className="p-4 font-medium text-[#2d2518]">{reg.parentName}</td>
-                          <td className="p-4 text-[#2d2518]">{reg.age}</td>
-                          <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                              reg.experience === 'intermediate' ? 'bg-blue-100 text-blue-800' :
-                              reg.experience === 'advanced' ? 'bg-purple-100 text-purple-800' :
-                              'bg-green-100 text-green-800'
-                            }`}>
-                              {reg.experience.charAt(0).toUpperCase() + reg.experience.slice(1)}
-                            </span>
-                          </td>
-                          <td className="p-4 text-[#1c1710] font-mono font-semibold">{reg.phone}</td>
-                          <td className="p-4 text-[#4f4639] text-sm">
-                            {reg.registeredDate} <br />
-                            <span className="text-[#776b5a]">{reg.registeredTime}</span>
-                          </td>
-                        </motion.tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={6} className="p-12 text-center text-[#6b5b47]">
-                          No registrations found yet.
+                  {registrations.length > 0 ? (
+                    registrations.map((reg, index) => (
+                      <tr 
+                        key={reg.fullTimestamp}
+                        className="odd:bg-white even:bg-[#fbf8f0] hover:bg-[#fff0c7] transition-colors"
+                      >
+                        <td className="p-4 font-semibold text-[#1c1710]">{reg.name}</td>
+                        <td className="p-4 font-medium text-[#2d2518]">{reg.parentName}</td>
+                        <td className="p-4 text-[#2d2518]">{reg.age}</td>
+                        <td className="p-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold \${
+                            reg.experience === 'intermediate' ? 'bg-blue-100 text-blue-800' :
+                            reg.experience === 'advanced' ? 'bg-purple-100 text-purple-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {reg.experience.charAt(0).toUpperCase() + reg.experience.slice(1)}
+                          </span>
+                        </td>
+                        <td className="p-4 text-[#1c1710] font-mono font-semibold">{reg.phone}</td>
+                        <td className="p-4 text-[#4f4639] text-sm">
+                          {reg.registeredDate} <br />
+                          <span className="text-[#776b5a]">{reg.registeredTime}</span>
                         </td>
                       </tr>
-                    )}
-                  </AnimatePresence>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="p-12 text-center text-[#6b5b47]">
+                        No registrations found yet.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

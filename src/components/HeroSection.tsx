@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const chessPieces = ["♔", "♕", "♖", "♗", "♘", "♙"];
@@ -48,24 +47,16 @@ export default function HeroSection() {
       {/* Floating particles */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p) => (
-          <motion.div
+          <div
             key={p.id}
-            className="absolute rounded-full bg-[#1a3a52]/40"
+            className="absolute rounded-full bg-[#1a3a52]/40 animate-float"
             style={{
               left: `${p.x}%`,
               top: `${p.y}%`,
               width: p.size,
               height: p.size,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: "easeInOut",
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
             }}
           />
         ))}
@@ -74,28 +65,20 @@ export default function HeroSection() {
       {/* Floating chess pieces */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {chessPieces.map((piece, i) => (
-          <motion.div
+          <div
             key={i}
-            className="absolute text-[#1a3a52]/[0.08] select-none"
+            className="absolute text-[#1a3a52]/[0.08] select-none animate-float-slow"
             style={{
               fontSize: `${60 + i * 20}px`,
               left: `${10 + i * 15}%`,
               top: `${15 + (i % 3) * 25}%`,
-            }}
-            animate={{
-              y: [0, -25 + i * 5, 0],
-              rotate: [0, i % 2 === 0 ? 10 : -10, 0],
-              opacity: [0.04, 0.08, 0.04],
-            }}
-            transition={{
-              duration: 8 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5,
+              animationDuration: `${8 + i * 2}s`,
+              animationDelay: `${i * 0.5}s`,
+              transform: `rotate(${i % 2 === 0 ? 10 : -10}deg)`,
             }}
           >
             {piece}
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -103,61 +86,49 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
           {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-[family-name:var(--font-playfair)] leading-[1.1] mb-6 blue-glow"
+          <h1
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-[family-name:var(--font-playfair)] leading-[1.1] mb-6 blue-glow reveal reveal-up"
+            style={{ transitionDelay: '0.4s' }}
           >
             <span className="text-[#1a3a52]">NEXA Chess With</span>
             <br />
             <span className="text-[#2a6a9a]">Expert Coaching</span>
-          </motion.h1>
+          </h1>
 
           {/* Subheading */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-lg sm:text-xl text-[#4a5f7f] max-w-2xl mx-auto mb-10 leading-relaxed"
+          <p
+            className="text-lg sm:text-xl text-[#4a5f7f] max-w-2xl mx-auto mb-10 leading-relaxed reveal reveal-up"
+            style={{ transitionDelay: '0.6s' }}
           >
             Professional online chess training for{" "}
             <span className="text-[#1a3a52]">Beginners</span>,{" "}
             <span className="text-[#1a3a52]">Intermediate</span>, and{" "}
             <span className="text-[#1a3a52]">Advanced</span> players.
-          </motion.p>
+          </p>
 
           {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          <div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 reveal reveal-up"
+            style={{ transitionDelay: '0.8s' }}
           >
-            <motion.a
+            <a
               href="#demo"
-              className="btn-gold text-base !py-3.5 !px-8 rounded-full font-semibold tracking-wide inline-flex items-center gap-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="btn-gold text-base !py-3.5 !px-8 rounded-full font-semibold tracking-wide inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
             >
               <span>♞</span> Book Free Demo
-            </motion.a>
-            <motion.a
+            </a>
+            <a
               href="#programs"
-              className="btn-outline-gold text-base !py-3.5 !px-8 rounded-full inline-flex items-center gap-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="btn-outline-gold text-base !py-3.5 !px-8 rounded-full inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform"
             >
               Explore Programs <span>→</span>
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
 
           {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="flex flex-wrap justify-center gap-8 sm:gap-12 mt-16"
+          <div
+            className="flex flex-wrap justify-center gap-8 sm:gap-12 mt-16 reveal reveal-up"
+            style={{ transitionDelay: '1.0s' }}
           >
             {[
               { value: "5,000+", label: "Students Trained" },
@@ -174,30 +145,20 @@ export default function HeroSection() {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal"
+        style={{ transitionDelay: '1.5s' }}
       >
         <span className="text-xs text-[#7a8fa5] uppercase tracking-widest">Scroll</span>
-        <motion.div
-          className="w-5 h-8 rounded-full border border-[#1a3a52]/30 flex justify-center pt-1.5"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <motion.div
-            className="w-1 h-2 rounded-full bg-[#1a3a52]"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        </motion.div>
-      </motion.div>
+        <div className="w-5 h-8 rounded-full border border-[#1a3a52]/30 flex justify-center pt-1.5 animate-scroll-indicator">
+          <div className="w-1 h-2 rounded-full bg-[#1a3a52]" />
+        </div>
+      </div>
     </section>
   );
 }

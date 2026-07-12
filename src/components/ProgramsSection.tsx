@@ -1,9 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-
 const programs = [
   {
     level: "Beginner Level",
@@ -60,22 +56,16 @@ const programs = [
 ];
 
 export default function ProgramsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <section id="programs" className="relative py-24 sm:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 chess-pattern opacity-20" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+        <div
+          className="text-center mb-16 reveal reveal-up"
         >
           <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
             Our Programs
@@ -86,19 +76,17 @@ export default function ProgramsSection() {
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Carefully curated programs designed to elevate your chess skills at every level
           </p>
-        </motion.div>
+        </div>
 
         {/* Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {programs.map((program, i) => (
-            <motion.div
+            <div
               key={program.level}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + i * 0.15 }}
-              className={`group relative rounded-2xl border border-dark-border ${program.borderColor} transition-all duration-500 card-lift overflow-hidden ${
+              className={`group relative rounded-2xl border border-dark-border ${program.borderColor} transition-all duration-500 card-lift overflow-hidden reveal reveal-up ${
                 program.featured ? "md:-mt-4 md:mb-[-16px]" : ""
               }`}
+              style={{ transitionDelay: `${0.2 + i * 0.15}s` }}
             >
               {/* Gradient bg */}
               <div className={`absolute inset-0 bg-gradient-to-br ${program.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -133,20 +121,18 @@ export default function ProgramsSection() {
                 </ul>
 
                 {/* CTA */}
-                <motion.a
+                <a
                   href="#demo"
-                  className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
                     program.featured
                       ? "btn-gold !rounded-xl"
                       : "border border-dark-border hover:border-gold/30 text-text-secondary hover:text-gold hover:bg-gold/5"
                   }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   Start Learning →
-                </motion.a>
+                </a>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

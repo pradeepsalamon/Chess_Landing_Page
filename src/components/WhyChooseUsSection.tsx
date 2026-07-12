@@ -1,8 +1,5 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-
 const features = [
   {
     icon: "🎓",
@@ -37,20 +34,15 @@ const features = [
 ];
 
 export default function WhyChooseUsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
     <section id="why-choose-us" className="relative py-24 sm:py-32 overflow-hidden">
       <div className="absolute inset-0 chess-pattern opacity-15" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="text-center mb-16 reveal reveal-up"
+          style={{ transitionDelay: '0s' }}
         >
           <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
             Why Choose Us
@@ -61,28 +53,25 @@ export default function WhyChooseUsSection() {
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Discover what makes our academy the preferred choice for chess excellence
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => (
-            <motion.div
+            <div
               key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-              className="group relative p-6 sm:p-8 rounded-2xl bg-dark-card border border-dark-border hover:border-gold/20 card-lift transition-all duration-500"
+              className="group relative p-6 sm:p-8 rounded-2xl bg-dark-card border border-dark-border hover:border-gold/20 card-lift transition-all duration-500 reveal reveal-up"
+              style={{ transitionDelay: `${0.1 + i * 0.1}s` }}
             >
               {/* Hover glow bg */}
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="relative">
-                <motion.div
-                  className="text-4xl mb-4"
-                  whileHover={{ scale: 1.2, rotate: 10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                <div
+                  className="text-4xl mb-4 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 inline-block"
                 >
                   {feature.icon}
-                </motion.div>
+                </div>
+                <br />
                 <h3 className="text-lg font-bold font-[family-name:var(--font-playfair)] mb-2 text-text-primary group-hover:text-gold transition-colors duration-300">
                   {feature.title}
                 </h3>
@@ -90,7 +79,7 @@ export default function WhyChooseUsSection() {
                   {feature.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

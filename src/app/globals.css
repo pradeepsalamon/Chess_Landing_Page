@@ -238,3 +238,22 @@ body {
   opacity: 0.3;
   pointer-events: none;
 }
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reveal-up {
+  transform: translateY(30px);
+}
+
+.reveal-scale {
+  transform: scale(0.8);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}

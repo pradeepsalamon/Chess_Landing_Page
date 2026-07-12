@@ -1,11 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export default function DemoClassSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -60,13 +57,12 @@ export default function DemoClassSection() {
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-gold/[0.03] rounded-full blur-[150px]" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left content */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
+          <div
+            className="reveal reveal-up"
+            style={{ transitionDelay: '0s' }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium tracking-widest uppercase bg-gold/10 text-gold border border-gold/20 mb-4">
               Free Trial Class
@@ -86,27 +82,24 @@ export default function DemoClassSection() {
                 { icon: "✓", text: "Meet your potential coach" },
                 { icon: "✓", text: "Get a custom learning roadmap" },
               ].map((item, i) => (
-                <motion.div
+                <div
                   key={item.text}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 reveal reveal-up"
+                  style={{ transitionDelay: `${0.3 + i * 0.1}s` }}
                 >
                   <span className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-gold text-xs">
                     {item.icon}
                   </span>
                   <span className="text-text-secondary">{item.text}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+          <div
+            className="reveal reveal-up"
+            style={{ transitionDelay: '0.2s' }}
           >
             <div className="relative rounded-2xl glass-strong border border-dark-border p-6 sm:p-8">
               {/* Form glow */}
@@ -206,45 +199,34 @@ export default function DemoClassSection() {
                     </div>
                   )}
 
-                  <motion.button
+                  <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full btn-gold !py-3.5 rounded-xl text-base font-bold tracking-wide mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                    className="w-full btn-gold !py-3.5 rounded-xl text-base font-bold tracking-wide mt-2 disabled:opacity-70 disabled:cursor-not-allowed hover:scale-105 active:scale-95 transition-transform"
                   >
                     {isSubmitting ? "Booking..." : "♞ Book Free Demo Class"}
-                  </motion.button>
+                  </button>
                 </form>
 
                 {/* Success popup */}
-                {submitted && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0 flex items-center justify-center bg-dark-card/95 rounded-2xl backdrop-blur-sm"
-                  >
-                    <div className="text-center p-6">
-                      <motion.div
-                        className="text-6xl mb-4"
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        ✅
-                      </motion.div>
-                      <h4 className="text-xl font-bold text-text-primary mb-2">
-                        Demo Booked Successfully!
-                      </h4>
-                      <p className="text-sm text-text-secondary">
-                        We&apos;ll contact you shortly on WhatsApp
-                      </p>
+                <div
+                  className={`absolute inset-0 flex items-center justify-center bg-dark-card/95 rounded-2xl backdrop-blur-sm transition-all duration-500 transform ${submitted ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
+                >
+                  <div className="text-center p-6">
+                    <div className="text-6xl mb-4 animate-bounce">
+                      ✅
                     </div>
-                  </motion.div>
-                )}
+                    <h4 className="text-xl font-bold text-text-primary mb-2">
+                      Demo Booked Successfully!
+                    </h4>
+                    <p className="text-sm text-text-secondary">
+                      We&apos;ll contact you shortly on WhatsApp
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
