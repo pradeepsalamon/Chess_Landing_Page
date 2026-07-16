@@ -10,6 +10,7 @@ const navItems = [
   { label: "Demo Classes", href: "#demo" },
   { label: "Training", href: "#sunday-training" },
   { label: "Contact", href: "#contact" },
+  { label: "Admin", href: "/admin" },
 ];
 
 export default function Navbar() {
@@ -35,7 +36,7 @@ export default function Navbar() {
             className="flex items-center gap-3 group hover:scale-105 transition-transform"
           >
             <img 
-              src="/nexa-logo.svg" 
+              src="/nexa_logo.png" 
               alt="NEXA Chess Academy" 
               className="w-12 h-12 drop-shadow-lg"
             />

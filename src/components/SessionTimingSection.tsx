@@ -1,15 +1,66 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
+
 const timelineItems = [
-  { time: "0-5 min", label: "Warm-up & Review", icon: "🧠" },
-  { time: "5-20 min", label: "Core Lesson & Theory", icon: "📖" },
-  { time: "20-35 min", label: "Practice & Puzzles", icon: "♟" },
-  { time: "35-45 min", label: "Game Play & Analysis", icon: "🏆" },
+  { time: "0-10 min", label: "Warm-up & Review", icon: "🧠" },
+  { time: "10-25 min", label: "Core Lesson & Theory", icon: "📖" },
+  { time: "25-40 min", label: "Practice & Puzzles", icon: "♟" },
+  { time: "40-55 min", label: "Game Play & Analysis", icon: "🏆" },
 ];
 
 export default function SessionTimingSection() {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    let startTime: number;
+    const duration = 2000;
+    const end = 55;
+    let req: number;
+    
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      
+      const easeOut = 1 - Math.pow(1 - Math.min(progress / duration, 1), 4);
+      const current = Math.min(Math.floor(easeOut * end), end);
+      
+      setCount(current);
+      
+      if (progress < duration) {
+        req = requestAnimationFrame(animate);
+      } else {
+        setCount(end);
+      }
+    };
+    
+    req = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(req);
+  }, [isVisible]);
+
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden">
+    <section ref={sectionRef} className="relative py-24 sm:py-32 overflow-hidden">
       <div className="absolute inset-0 chess-pattern opacity-15" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
@@ -22,7 +73,7 @@ export default function SessionTimingSection() {
             Session Structure
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-playfair)] mb-4">
-            Every Session: <span className="gold-text">45 Minutes</span>
+            Every Session: <span className="gold-text">45 - 55 Minutes</span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Structured, focused, and interactive — every minute counts
@@ -49,30 +100,41 @@ export default function SessionTimingSection() {
                 }}
               />
 
-              {/* Center content */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center glass rounded-full w-40 h-40 sm:w-48 sm:h-48 flex flex-col items-center justify-center">
-                  <div className="text-5xl sm:text-6xl font-bold gold-text font-[family-name:var(--font-playfair)]">
-                    45
+              {/* Tick marks */}
+              <div className="absolute inset-0">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute inset-0 flex justify-center"
+                    style={{ transform: `rotate(${i * 30}deg)` }}
+                  >
+                    <div className="w-0.5 h-3 bg-gold/30 mt-1 sm:mt-2" />
                   </div>
-                  <div className="text-sm text-text-secondary uppercase tracking-widest">
+                ))}
+              </div>
+
+              {/* Minute Hand */}
+              <div
+                className="absolute top-1/2 left-1/2 w-0.5 sm:w-1 bg-gold/30 rounded-full z-10"
+                style={{
+                  height: '42%',
+                  transformOrigin: 'bottom center',
+                  transform: `translate(-50%, -100%) rotate(${isVisible ? 330 : 0}deg)`,
+                  transition: 'transform 2s cubic-bezier(0.25, 1, 0.5, 1) 0.3s',
+                }}
+              />
+
+              {/* Center content */}
+              <div className="absolute inset-0 flex items-center justify-center z-20">
+                <div className="text-center glass rounded-full w-40 h-40 sm:w-48 sm:h-48 flex flex-col items-center justify-center relative shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/10">
+                  <div className="text-5xl sm:text-6xl font-bold gold-text font-[family-name:var(--font-playfair)]">
+                    {count}
+                  </div>
+                  <div className="text-sm text-text-secondary uppercase tracking-widest mt-1">
                     Minutes
                   </div>
                 </div>
               </div>
-
-              {/* Tick marks */}
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-0.5 h-3 bg-gold/30 left-1/2 -translate-x-1/2"
-                  style={{
-                    top: "4px",
-                    transform: `translateX(-50%) rotate(${i * 30}deg)`,
-                    transformOrigin: `center 128px`,
-                  }}
-                />
-              ))}
             </div>
           </div>
 

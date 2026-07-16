@@ -1,21 +1,21 @@
 "use client";
 
-const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@grandmasterchess.com";
+const contactEmail = 'nexachessacademy@gmail.com';
 
 const contactMethods = [
   {
     icon: "📱",
     label: "WhatsApp",
-    value: "+91 93617 27940",
-    href: "https://api.whatsapp.com/send?phone=919361727940&text=Hi! I'm interested in chess classes",
+    value: "+91 70108 54643",
+    href: "https://api.whatsapp.com/send?phone=9170108 54643&text=Hi! I'm interested in chess classes",
     color: "from-green-500/20 to-green-600/5",
     borderHover: "hover:border-green-500/30",
   },
   {
     icon: "📞",
     label: "Phone",
-    value: "+91 93617 27940",
-    href: "tel:+919361727940",
+    value: "+91 70108 54643",
+    href: "tel:+9170108 54643",
     color: "from-blue-500/20 to-blue-600/5",
     borderHover: "hover:border-blue-500/30",
   },
@@ -29,11 +29,11 @@ const contactMethods = [
   },
 ];
 
-const socialLinks = [
-  { icon: "📸", label: "Instagram", href: "#", color: "hover:bg-pink-500/10 hover:border-pink-500/30" },
-  { icon: "▶️", label: "YouTube", href: "#", color: "hover:bg-red-500/10 hover:border-red-500/30" },
-  { icon: "👍", label: "Facebook", href: "#", color: "hover:bg-blue-500/10 hover:border-blue-500/30" },
-];
+// const socialLinks = [
+//   { icon: "📸", label: "Instagram", href: "#", color: "hover:bg-pink-500/10 hover:border-pink-500/30" },
+//   { icon: "▶️", label: "YouTube", href: "#", color: "hover:bg-red-500/10 hover:border-red-500/30" },
+//   { icon: "👍", label: "Facebook", href: "#", color: "hover:bg-blue-500/10 hover:border-blue-500/30" },
+// ];
 
 export default function ContactSection() {
   return (
@@ -85,7 +85,7 @@ export default function ContactSection() {
         </div>
 
         {/* Social links */}
-        <div
+        {/* <div
           className="flex justify-center gap-4 reveal reveal-up"
           style={{ transitionDelay: '0.5s' }}
         >
@@ -98,7 +98,7 @@ export default function ContactSection() {
               {social.icon}
             </a>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );

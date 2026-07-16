@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ScrollObserver from "@/components/ScrollObserver";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,7 +15,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "GrandMaster Chess Academy | Professional Online Chess Training",
+  title: "Nexa Chess Academy | Professional Online Chess Training",
   description:
     "Master chess with expert coaching. Professional online chess training for Beginners, Intermediate, and Advanced players. Book your free demo class today!",
   keywords: [
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     "tournament preparation",
   ],
   openGraph: {
-    title: "GrandMaster Chess Academy | Professional Online Chess Training",
+    title: "Nexa Chess Academy | Professional Online Chess Training",
     description:
       "Master chess with expert coaching. Professional online chess training for all levels.",
     type: "website",
@@ -44,7 +45,8 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} antialiased`}
     >
-      <body className="min-h-screen bg-[#0a0a0f] font-[family-name:var(--font-inter)]">
+      <body className="min-h-screen font-[family-name:var(--font-inter)]">
+        <ThemeProvider />
         <ScrollObserver />
         {children}
       </body>

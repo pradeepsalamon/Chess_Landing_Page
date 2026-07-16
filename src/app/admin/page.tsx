@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
 interface Registration {
   name: string;
@@ -19,6 +19,21 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(false);
+  const [testColor, setTestColor] = useState('#fff8e6');
+
+  useEffect(() => {
+    const savedColor = localStorage.getItem("test_bg_color");
+    if (savedColor) {
+      setTestColor(savedColor);
+    }
+  }, []);
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = e.target.value;
+    setTestColor(newColor);
+    document.body.style.backgroundColor = newColor;
+    localStorage.setItem("test_bg_color", newColor);
+  };
 
   const fetchRegistrations = useCallback(async () => {
     setLoading(true);
@@ -188,6 +203,36 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
+
+        <div className="mt-8 bg-white p-6 rounded-xl border border-[#d8c49a] shadow-lg">
+          <h2 className="text-2xl font-bold text-[#24180d] mb-4">Site Theme Testing</h2>
+          <p className="text-[#6b5b47] mb-4">Select a color below to instantly test how it looks as the background color on the site. This only changes the color for you locally.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <input 
+              type="color" 
+              value={testColor} 
+              onChange={handleColorChange} 
+              className="w-16 h-16 cursor-pointer border-0 rounded"
+            />
+            <input 
+              type="text" 
+              value={testColor} 
+              onChange={handleColorChange} 
+              placeholder="#F8F7F2"
+              className="font-mono text-[#24180d] font-bold text-lg p-3 w-32 border border-[#cdbb95] rounded-lg focus:border-[#9b6b18] outline-none"
+            />
+            <button 
+              onClick={() => {
+                setTestColor('#fff8e6');
+                document.body.style.backgroundColor = '#fff8e6';
+                localStorage.setItem("test_bg_color", '#fff8e6');
+              }}
+              className="border border-[#9b6b18] text-[#5d3c07] bg-white px-4 py-2 rounded-lg font-semibold hover:bg-[#fff7df] transition-colors"
+            >
+              Reset to Default
+            </button>
+          </div>
+        </div>
 
         <footer className="mt-8 text-center text-[#6b5b47] text-sm">
           Total Registrations: {registrations.length}

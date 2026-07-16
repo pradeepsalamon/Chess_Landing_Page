@@ -48,7 +48,7 @@ export default function WhyChooseUsSection() {
             Why Choose Us
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-[family-name:var(--font-playfair)] mb-4">
-            Why <span className="gold-text">GrandMaster</span> Academy?
+            Why <span className="gold-text">Nexa Chess</span> Academy?
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
             Discover what makes our academy the preferred choice for chess excellence

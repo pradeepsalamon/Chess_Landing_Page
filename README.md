@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06b6d4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-A modern, responsive website for **NEXAGEN Chess Academy** - a professional online chess training platform offering expert coaching for beginners, intermediate, and advanced players.
+A modern, responsive website for **NEXA Chess Academy** - a professional online chess training platform offering expert coaching for beginners, intermediate, and advanced players.
 
 ## 📖 About
 
@@ -160,7 +160,7 @@ Feel free to submit issues and enhancement requests!
 
 ## 📄 License
 
-This project is part of NEXAGEN Chess Academy.
+This project is part of NEXA Chess Academy.
 
 ---
 

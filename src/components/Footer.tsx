@@ -16,7 +16,7 @@ const programs = [
   { label: "Sunday Training", href: "#sunday-training" },
 ];
 
-const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@grandmasterchess.com";
+const contactEmail = "nexachessacademy@gmail.com";
 
 export default function Footer() {
   return (
@@ -31,12 +31,12 @@ export default function Footer() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-4 gap-10">
           {/* Brand */}
-          <div className="md:col-span-1 reveal reveal-up" style={{ transitionDelay: '0s' }}>
+          <div className="md:col-span-1 reveal reveal-up flex flex-col items-center text-center md:items-start md:text-left" style={{ transitionDelay: '0s' }}>
             <div className="flex items-center gap-3 mb-4">
               <img 
-                src="/nexa-logo.svg" 
+                src="/nexa_logo.png" 
                 alt="NEXA Chess Academy" 
-                className="w-12 h-12 drop-shadow-lg"
+                className="w-24 h-24 md:w-12 md:h-12 drop-shadow-lg object-contain"
               />
             </div>
             <p className="text-sm text-text-secondary leading-relaxed mb-6">
@@ -44,7 +44,7 @@ export default function Footer() {
             </p>
 
             {/* Social icons */}
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
               {["📸", "▶️", "👍"].map((icon, i) => (
                 <a
                   key={i}
@@ -54,7 +54,7 @@ export default function Footer() {
                   {icon}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links */}
@@ -105,7 +105,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-text-secondary">
                 <span className="text-gold mt-0.5">📞</span>
-                +91 93617 27940
+                +91 7010854643
               </li>
               <li className="flex items-start gap-3 text-sm text-text-secondary">
                 <span className="text-gold mt-0.5">✉️</span>
@@ -124,7 +124,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4 reveal reveal-up" style={{ transitionDelay: '0.4s' }}>
           <p className="text-xs text-text-muted">
-            © {new Date().getFullYear()} GrandMaster Chess Academy. All Rights Reserved.
+            © {new Date().getFullYear()} Nexa Chess Academy. All Rights Reserved.
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-xs text-text-muted hover:text-gold transition-colors">

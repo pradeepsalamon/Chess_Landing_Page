@@ -38,7 +38,7 @@ const programs = [
   },
   {
     level: "Advanced Level",
-    icon: "♞",
+    icon: "♚",
     color: "from-purple-500/20 to-purple-600/5",
     borderColor: "hover:border-purple-500/30",
     glowColor: "group-hover:shadow-purple-500/10",
@@ -123,11 +123,7 @@ export default function ProgramsSection() {
                 {/* CTA */}
                 <a
                   href="#demo"
-                  className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    program.featured
-                      ? "btn-gold !rounded-xl"
-                      : "border border-dark-border hover:border-gold/30 text-text-secondary hover:text-gold hover:bg-gold/5"
-                  }`}
+                  className="block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95 btn-gold !rounded-xl"
                 >
                   Start Learning →
                 </a>
