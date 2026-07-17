@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ScrollObserver from "@/components/ScrollObserver";
 import ThemeProvider from "@/components/ThemeProvider";
+import TrackingProvider from "@/components/TrackingProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen font-[family-name:var(--font-inter)]">
         <ThemeProvider />
+        <TrackingProvider />
         <ScrollObserver />
         {children}
       </body>

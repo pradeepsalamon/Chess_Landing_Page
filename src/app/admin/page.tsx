@@ -1,27 +1,25 @@
 'use client';
 
 import React, { useCallback, useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Users, UserPlus, TrendingUp, Filter, ChevronRight } from 'lucide-react';
 
-interface Registration {
-  name: string;
-  parentName: string;
-  age: string;
-  experience: string;
-  phone: string;
-  registeredDate: string;
-  registeredTime: string;
-  fullTimestamp: string;
-}
-
-export default function AdminDashboard() {
+export default function AdminDashboardPage() {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState('');
-  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(false);
+  const [metrics, setMetrics] = useState<any>(null);
+  
+  // Theme testing state (retained from previous request)
   const [testColor, setTestColor] = useState('#fff8e6');
 
   useEffect(() => {
+    const authStatus = localStorage.getItem('adminAuth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      fetchMetrics();
+    }
     const savedColor = localStorage.getItem("test_bg_color");
     if (savedColor) {
       setTestColor(savedColor);
@@ -35,29 +33,20 @@ export default function AdminDashboard() {
     localStorage.setItem("test_bg_color", newColor);
   };
 
-  const fetchRegistrations = useCallback(async () => {
+  const fetchMetrics = useCallback(async () => {
     setLoading(true);
-    setError('');
     try {
-      const response = await fetch('/api/admin/registrations');
-
-      if (response.status === 401) {
+      const res = await fetch('/api/admin/metrics');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        setMetrics(data);
+      } else if (res.status === 401) {
         setIsAuthenticated(false);
-        setRegistrations([]);
-        return;
+        localStorage.removeItem('adminAuth');
       }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data?.error || 'Failed to fetch registrations');
-      }
-
-      setRegistrations(data.registrations || []);
-      setIsAuthenticated(true);
     } catch (err) {
-      console.error('Failed to fetch:', err);
-      setError('Failed to load registrations.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -65,47 +54,44 @@ export default function AdminDashboard() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('/api/admin/auth', {
+      const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       });
-      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data?.error || 'Invalid password');
+      if (res.ok) {
+        setIsAuthenticated(true);
+        localStorage.setItem('adminAuth', 'true');
+        fetchMetrics();
+      } else {
+        setError('Invalid password');
       }
-
-      setIsAuthenticated(true);
-      setPassword('');
-      await fetchRegistrations();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Invalid password');
+      setError('An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   const logout = async () => {
+    localStorage.removeItem('adminAuth');
     await fetch('/api/admin/auth', { method: 'DELETE' });
     setIsAuthenticated(false);
-    setRegistrations([]);
+    setMetrics(null);
   };
 
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#f5f1e8] flex items-center justify-center p-4">
-        <div 
-          className="w-full max-w-md bg-white p-8 rounded-xl border border-[#d8c49a] shadow-xl animate-[float_0.5s_ease-out_forwards]"
-        >
+        <div className="w-full max-w-md bg-white p-8 rounded-xl border border-[#d8c49a] shadow-xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#24180d] mb-2">Admin Access</h1>
-            <p className="text-[#6b5b47]">Enter password to view registrations</p>
+            <p className="text-[#6b5b47]">Enter password to access CRM dashboard</p>
           </div>
           
           <form onSubmit={handleLogin} className="space-y-6">
@@ -130,83 +116,99 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f1e8] text-[#1c1710] p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans p-4 sm:p-8 pb-20">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[#24180d]">Registration Dashboard</h1>
-            <p className="text-[#6b5b47] mt-2">Manage and view all demo class registrations</p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">CRM Dashboard</h1>
+            <p className="text-gray-500 mt-2">Marketing performance and lead tracking overview</p>
           </div>
           <div className="flex gap-4">
-            <button onClick={fetchRegistrations} className="border border-[#9b6b18] text-[#5d3c07] bg-white px-6 py-2 rounded-lg font-semibold hover:bg-[#fff7df] transition-colors">
-              Refresh Data
-            </button>
-            <button onClick={logout} className="bg-red-700 text-white border border-red-800 px-6 py-2 rounded-lg hover:bg-red-800 transition-all">
+            <Link 
+              href="/admin/leads" 
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-sm"
+            >
+              Open Leads Pipeline <ChevronRight className="w-4 h-4" />
+            </Link>
+            <button onClick={logout} className="border border-red-200 text-red-600 bg-white px-6 py-2 rounded-lg font-semibold hover:bg-red-50 transition">
               Logout
             </button>
           </div>
         </header>
 
-        {loading ? (
+        {loading || !metrics ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-[#d8c49a] shadow-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-[#24180d] border-b border-[#24180d]">
-                  <tr>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Student Name</th>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Parent Name</th>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Age</th>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Experience</th>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Phone Number</th>
-                    <th className="p-4 font-semibold text-[#f6d77b]">Registration Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#eadfca]">
-                  {registrations.length > 0 ? (
-                    registrations.map((reg, index) => (
-                      <tr 
-                        key={reg.fullTimestamp}
-                        className="odd:bg-white even:bg-[#fbf8f0] hover:bg-[#fff0c7] transition-colors"
-                      >
-                        <td className="p-4 font-semibold text-[#1c1710]">{reg.name}</td>
-                        <td className="p-4 font-medium text-[#2d2518]">{reg.parentName}</td>
-                        <td className="p-4 text-[#2d2518]">{reg.age}</td>
-                        <td className="p-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold \${
-                            reg.experience === 'intermediate' ? 'bg-blue-100 text-blue-800' :
-                            reg.experience === 'advanced' ? 'bg-purple-100 text-purple-800' :
-                            'bg-green-100 text-green-800'
-                          }`}>
-                            {reg.experience.charAt(0).toUpperCase() + reg.experience.slice(1)}
-                          </span>
-                        </td>
-                        <td className="p-4 text-[#1c1710] font-mono font-semibold">{reg.phone}</td>
-                        <td className="p-4 text-[#4f4639] text-sm">
-                          {reg.registeredDate} <br />
-                          <span className="text-[#776b5a]">{reg.registeredTime}</span>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={6} className="p-12 text-center text-[#6b5b47]">
-                        No registrations found yet.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+          <div className="space-y-8">
+            {/* Top Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Visitors</p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">{metrics.visitors?.total || 0}</p>
+                  </div>
+                  <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
+                    <Users className="w-6 h-6" />
+                  </div>
+                </div>
+                <p className="text-sm text-green-600 font-medium mt-4">+{metrics.visitors?.today || 0} today</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Leads</p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">{metrics.leads?.total || 0}</p>
+                  </div>
+                  <div className="p-3 bg-indigo-50 rounded-lg text-indigo-600">
+                    <UserPlus className="w-6 h-6" />
+                  </div>
+                </div>
+                <p className="text-sm text-green-600 font-medium mt-4">+{metrics.leads?.today || 0} today</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Conversion Rate</p>
+                    <p className="text-3xl font-bold text-gray-900 mt-2">{metrics.conversion?.rate || 0}%</p>
+                  </div>
+                  <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
+                    <TrendingUp className="w-6 h-6" />
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500 font-medium mt-4">{metrics.conversion?.count || 0} converted leads</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Pipeline Sources</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-2">Organic: {metrics.sourceDistribution?.Organic || 0}</p>
+                  </div>
+                  <div className="p-3 bg-purple-50 rounded-lg text-purple-600">
+                    <Filter className="w-6 h-6" />
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500 font-medium mt-4">Meta/Ads: {
+                  Object.entries(metrics.sourceDistribution || {})
+                    .filter(([k]) => k !== 'Organic')
+                    .reduce((sum, [_, v]) => sum + Number(v), 0)
+                }</p>
+              </div>
+
             </div>
           </div>
         )}
 
-        <div className="mt-8 bg-white p-6 rounded-xl border border-[#d8c49a] shadow-lg">
-          <h2 className="text-2xl font-bold text-[#24180d] mb-4">Site Theme Testing</h2>
-          <p className="text-[#6b5b47] mb-4">Select a color below to instantly test how it looks as the background color on the site. This only changes the color for you locally.</p>
+        {/* Theme Tester Retained */}
+        <div className="mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Site Theme Testing</h2>
+          <p className="text-gray-500 mb-4">Select a color below to instantly test how it looks as the background color on the site. This only changes the color for you locally.</p>
           <div className="flex flex-wrap items-center gap-4">
             <input 
               type="color" 
@@ -219,7 +221,7 @@ export default function AdminDashboard() {
               value={testColor} 
               onChange={handleColorChange} 
               placeholder="#F8F7F2"
-              className="font-mono text-[#24180d] font-bold text-lg p-3 w-32 border border-[#cdbb95] rounded-lg focus:border-[#9b6b18] outline-none"
+              className="font-mono text-gray-900 font-bold text-lg p-3 w-32 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             />
             <button 
               onClick={() => {
@@ -227,16 +229,13 @@ export default function AdminDashboard() {
                 document.body.style.backgroundColor = '#fff8e6';
                 localStorage.setItem("test_bg_color", '#fff8e6');
               }}
-              className="border border-[#9b6b18] text-[#5d3c07] bg-white px-4 py-2 rounded-lg font-semibold hover:bg-[#fff7df] transition-colors"
+              className="border border-gray-300 text-gray-700 bg-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-50 transition"
             >
               Reset to Default
             </button>
           </div>
         </div>
 
-        <footer className="mt-8 text-center text-[#6b5b47] text-sm">
-          Total Registrations: {registrations.length}
-        </footer>
       </div>
     </div>
   );

@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model VisitorSession {
+  id           String   @id @default(uuid())
+  sessionId    String   @unique
+  visitorId    String
+  
+  ipAddress    String?
+  userAgent    String?
+  browser      String?
+  os           String?
+  deviceType   String?
+  country      String?
+  city         String?
+  
+  referrer     String?
+  landingPage  String?
+  
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  utmContent   String?
+  utmTerm      String?
+  
+  fbclid       String?
+  gclid        String?
+  
+  firstVisit   DateTime @default(now())
+  lastVisit    DateTime @updatedAt
+  pageViews    Int      @default(1)
+
+  leads        Lead[]
+
+  @@map("visitor_sessions")
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  DEMO_SCHEDULED
+  DEMO_ATTENDED
+  FOLLOW_UP
+  PAYMENT_PENDING
+  CONVERTED
+  ACTIVE_STUDENT
+  LOST
+}
+
+enum LeadPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Lead {
+  id               BigInt        @id @default(autoincrement())
+  studentName      String        @map("student_name") @db.VarChar(120)
+  parentName       String        @map("parent_name") @db.VarChar(120)
+  studentAge       Int           @map("student_age") @db.SmallInt
+  experienceLevel  String        @map("experience_level") @db.VarChar(20)
+  phone            String        @db.Char(10)
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  // New CRM Fields
+  status           LeadStatus    @default(NEW)
+  assignedCoachId  String?       
+  priority         LeadPriority  @default(MEDIUM)
+  leadScore        Int           @default(0)
+  
+  demoDate         DateTime?
+  lastContactedAt  DateTime?
+  lastActivityAt   DateTime?
+  convertedAt      DateTime?
+  
+  source           String?
+  campaign         String?
+  adSet            String?
+  adName           String?
+  
+  remarks          String?       @db.Text
+  followUpDate     DateTime?
+  createdBy        String?
+  updatedBy        String?
+
+  visitorSessionId String?
+  visitorSession   VisitorSession? @relation(fields: [visitorSessionId], references: [id])
+
+  activities       LeadActivity[]
+  notes            LeadNote[]
+
+  @@map("demo_registrations")
+}
+
+model LeadActivity {
+  id          String   @id @default(uuid())
+  leadId      BigInt
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  activityType String
+  title       String
+  description String?  @db.Text
+  
+  createdBy   String?
+  createdAt   DateTime @default(now())
+
+  @@map("lead_activities")
+}
+
+model LeadNote {
+  id        String   @id @default(uuid())
+  leadId    BigInt
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  note      String   @db.Text
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@map("lead_notes")
+}
