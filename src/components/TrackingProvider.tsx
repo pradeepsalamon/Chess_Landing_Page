@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export default function TrackingProvider() {
+function TrackingLogic() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -29,4 +29,12 @@ export default function TrackingProvider() {
   }, [pathname, searchParams]);
 
   return null;
+}
+
+export default function TrackingProvider() {
+  return (
+    <Suspense fallback={null}>
+      <TrackingLogic />
+    </Suspense>
+  );
 }

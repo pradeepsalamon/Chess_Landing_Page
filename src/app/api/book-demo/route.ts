@@ -66,7 +66,8 @@ export async function POST(request: Request) {
     logServerError('Error saving registration', error);
     
     if (error instanceof z.ZodError) {
-      const firstError = error.errors[0]?.message || 'Validation failed';
+      const zodError = error as any;
+      const firstError = zodError.errors[0]?.message || 'Validation failed';
       return NextResponse.json({ success: false, error: firstError }, { status: 400 });
     }
     

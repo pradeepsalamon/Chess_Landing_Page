@@ -9,7 +9,7 @@ export const DemoRegistrationSchema = z.object({
     return !isNaN(num) && num >= 4 && num <= 18;
   }, 'Student age must be between 4 and 18.'),
   experience: z.enum(['beginner', 'intermediate', 'advanced'], {
-    errorMap: () => ({ message: 'Please select a valid experience level.' }),
+    message: 'Please select a valid experience level.',
   }),
   phone: z.string().refine((val) => /^\d{10}$/.test(val.replace(/\D/g, '')), 'Contact number must be exactly 10 digits.'),
 });
@@ -89,7 +89,7 @@ export async function getDemoRegistrations(): Promise<DemoRegistration[]> {
       name: lead.studentName,
       parentName: lead.parentName,
       age: lead.studentAge.toString(),
-      experience: lead.experienceLevel,
+      experience: lead.experienceLevel as 'beginner' | 'intermediate' | 'advanced',
       phone: lead.phone,
       registeredDate: now.toISOString().split("T")[0],
       registeredTime: now.toTimeString().split(" ")[0],
