@@ -83,9 +83,7 @@ export default function ProgramsSection() {
           {programs.map((program, i) => (
             <div
               key={program.level}
-              className={`group relative rounded-2xl border border-dark-border ${program.borderColor} transition-all duration-500 card-lift overflow-hidden reveal reveal-up ${
-                program.featured ? "md:-mt-4 md:mb-[-16px]" : ""
-              }`}
+              className={`group relative flex flex-col h-full rounded-2xl border border-dark-border ${program.borderColor} transition-all duration-500 card-lift overflow-hidden reveal reveal-up`}
               style={{ transitionDelay: `${0.2 + i * 0.15}s` }}
             >
               {/* Gradient bg */}
@@ -94,9 +92,9 @@ export default function ProgramsSection() {
               {/* Glow */}
               <div className={`absolute -inset-[1px] rounded-2xl shadow-2xl ${program.glowColor} transition-shadow duration-500 opacity-0 group-hover:opacity-100`} />
 
-              <div className="relative p-6 sm:p-8">
+              <div className="relative p-6 sm:p-8 flex flex-col flex-grow">
                 {/* Tag */}
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${program.tagColor} mb-6`}>
+                <span className={`self-start inline-block px-3 py-1 rounded-full text-xs font-medium ${program.tagColor} mb-6`}>
                   {program.tag}
                 </span>
 
@@ -123,7 +121,7 @@ export default function ProgramsSection() {
                 {/* CTA */}
                 <a
                   href="#demo"
-                  className="block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95 btn-gold !rounded-xl"
+                  className="mt-auto block text-center py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 active:scale-95 btn-gold !rounded-xl"
                 >
                   Start Learning →
                 </a>

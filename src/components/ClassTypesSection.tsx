@@ -45,7 +45,6 @@ const classTypes = [
 export default function ClassTypesSection() {
   return (
     <section id="class-types" className="relative py-24 sm:py-32">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#fff8e6] via-[#fffbf0] to-[#fff8e6]" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

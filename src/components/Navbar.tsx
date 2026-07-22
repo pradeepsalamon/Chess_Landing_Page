@@ -25,7 +25,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white shadow-lg shadow-blue-500/10 reveal reveal-up ${scrolled ? 'py-0' : 'py-2'}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-white shadow-lg shadow-blue-500/10 border-b-2 border-[#1a3a52] reveal reveal-up ${scrolled ? 'py-0' : 'py-2'}`}
       style={{ transitionDelay: '0s' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

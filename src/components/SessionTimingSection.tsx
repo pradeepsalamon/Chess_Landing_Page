@@ -100,17 +100,30 @@ export default function SessionTimingSection() {
                 }}
               />
 
-              {/* Tick marks */}
+              {/* Tick marks & Chess pieces */}
               <div className="absolute inset-0">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute inset-0 flex justify-center"
-                    style={{ transform: `rotate(${i * 30}deg)` }}
-                  >
-                    <div className="w-0.5 h-3 bg-gold/30 mt-1 sm:mt-2" />
-                  </div>
-                ))}
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const isQuarter = i % 3 === 0;
+                  const pieces = ["♔", "♕", "♖", "♘"];
+                  return (
+                    <div
+                      key={i}
+                      className="absolute inset-0 flex justify-center items-start"
+                      style={{ transform: `rotate(${i * 30}deg)` }}
+                    >
+                      {isQuarter ? (
+                        <div 
+                          className="text-gold/80 text-xl sm:text-2xl leading-none mt-1 sm:mt-2"
+                          style={{ transform: `rotate(-${i * 30}deg)` }}
+                        >
+                          {pieces[i / 3]}
+                        </div>
+                      ) : (
+                        <div className="w-0.5 h-3 bg-gold/30 mt-1 sm:mt-2" />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Minute Hand */}

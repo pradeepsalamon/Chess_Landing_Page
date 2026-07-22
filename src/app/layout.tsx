@@ -46,7 +46,24 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} antialiased`}
     >
-      <body className="min-h-screen font-[family-name:var(--font-inter)]">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (
+                new URLSearchParams(window.location.search).get("feedback") ||
+                sessionStorage.getItem("review-mode") === "true"
+              ) {
+                var s = document.createElement("script");
+                s.src = "https://feedback-cdn.marmeto.org/feedback.js?projectID=b0ea7c43-6e62-4aa7-adbc-e2c9163a269c";
+                s.async = true;
+                document.head.appendChild(s);
+              }
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen font-[family-name:var(--font-inter)] bg-[var(--background)] text-[var(--text-primary)]">
         <ThemeProvider />
         <TrackingProvider />
         <ScrollObserver />

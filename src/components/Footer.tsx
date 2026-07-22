@@ -21,11 +21,10 @@ const contactEmail = "nexachessacademy@gmail.com";
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden">
-      {/* Top border */}
-      <div className="h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      {/* Top blue border line */}
+      <div className="h-1 bg-[#1a3a52] w-full" />
 
       {/* Background */}
-      <div className="absolute inset-0 bg-[#fff8e6]" />
       <div className="absolute inset-0 chess-pattern opacity-10" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

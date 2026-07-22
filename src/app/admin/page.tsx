@@ -2,7 +2,31 @@
 
 import React, { useCallback, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Users, UserPlus, TrendingUp, Filter, ChevronRight } from 'lucide-react';
+import { 
+  Users, 
+  UserPlus, 
+  TrendingUp, 
+  Filter, 
+  ChevronRight, 
+  Palette, 
+  Check, 
+  RotateCcw, 
+  Globe, 
+  Save,
+  CheckCircle2,
+  AlertCircle
+} from 'lucide-react';
+
+const PRESET_COLORS = [
+  { name: 'Warm Cream (Default)', hex: '#fff8e6', textDark: true },
+  { name: 'Soft Linen', hex: '#f8f7f2', textDark: true },
+  { name: 'Pure White', hex: '#ffffff', textDark: true },
+  { name: 'Light Gray', hex: '#f3f4f6', textDark: true },
+  { name: 'Soft Amber', hex: '#fffbeb', textDark: true },
+  { name: 'Mint Fresh', hex: '#f0fdf4', textDark: true },
+  { name: 'Dark Navy', hex: '#0f172a', textDark: false },
+  { name: 'Midnight Charcoal', hex: '#18181b', textDark: false },
+];
 
 export default function AdminDashboardPage() {
   const [password, setPassword] = useState('');
@@ -11,27 +35,26 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(false);
   const [metrics, setMetrics] = useState<any>(null);
   
-  // Theme testing state (retained from previous request)
-  const [testColor, setTestColor] = useState('#fff8e6');
+  // Dynamic Theme state
+  const [activeGlobalColor, setActiveGlobalColor] = useState('#fff8e6');
+  const [selectedColor, setSelectedColor] = useState('#fff8e6');
+  const [savingTheme, setSavingTheme] = useState(false);
+  const [themeStatus, setThemeStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  useEffect(() => {
-    const authStatus = localStorage.getItem('adminAuth');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-      fetchMetrics();
-    }
-    const savedColor = localStorage.getItem("test_bg_color");
-    if (savedColor) {
-      setTestColor(savedColor);
+  const fetchThemeSetting = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/theme');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.backgroundColor) {
+          setActiveGlobalColor(data.backgroundColor);
+          setSelectedColor(data.backgroundColor);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch dynamic theme setting:', err);
     }
   }, []);
-
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value;
-    setTestColor(newColor);
-    document.body.style.backgroundColor = newColor;
-    localStorage.setItem("test_bg_color", newColor);
-  };
 
   const fetchMetrics = useCallback(async () => {
     setLoading(true);
@@ -52,6 +75,53 @@ export default function AdminDashboardPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const authStatus = localStorage.getItem('adminAuth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      fetchMetrics();
+      fetchThemeSetting();
+    }
+  }, [fetchMetrics, fetchThemeSetting]);
+
+  const handlePreviewColor = (newColor: string) => {
+    setSelectedColor(newColor);
+    document.body.style.backgroundColor = newColor;
+    localStorage.setItem("test_bg_color", newColor);
+    window.dispatchEvent(new CustomEvent('themeChange', { detail: { backgroundColor: newColor } }));
+  };
+
+  const handleSaveTheme = async (colorToSave?: string) => {
+    const color = colorToSave || selectedColor;
+    setSavingTheme(true);
+    setThemeStatus(null);
+    try {
+      const res = await fetch('/api/admin/theme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ backgroundColor: color }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setActiveGlobalColor(data.backgroundColor);
+        setSelectedColor(data.backgroundColor);
+        document.body.style.backgroundColor = data.backgroundColor;
+        localStorage.setItem("site_bg_color", data.backgroundColor);
+        localStorage.setItem("test_bg_color", data.backgroundColor);
+        window.dispatchEvent(new CustomEvent('themeChange', { detail: { backgroundColor: data.backgroundColor } }));
+        setThemeStatus({ type: 'success', message: 'Global background color published successfully to live website!' });
+      } else {
+        const errData = await res.json();
+        setThemeStatus({ type: 'error', message: errData.error || 'Failed to publish background color.' });
+      }
+    } catch (err) {
+      setThemeStatus({ type: 'error', message: 'An error occurred while saving global theme.' });
+    } finally {
+      setSavingTheme(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -68,6 +138,7 @@ export default function AdminDashboardPage() {
         setIsAuthenticated(true);
         localStorage.setItem('adminAuth', 'true');
         fetchMetrics();
+        fetchThemeSetting();
       } else {
         setError('Invalid password');
       }
@@ -115,13 +186,15 @@ export default function AdminDashboardPage() {
     );
   }
 
+  const isUnsaved = selectedColor.toLowerCase() !== activeGlobalColor.toLowerCase();
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans p-4 sm:p-8 pb-20">
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center mb-8">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">CRM Dashboard</h1>
-            <p className="text-gray-500 mt-2">Marketing performance and lead tracking overview</p>
+            <p className="text-gray-500 mt-2">Marketing performance, lead tracking & site theme customization</p>
           </div>
           <div className="flex gap-4">
             <Link 
@@ -205,35 +278,156 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Theme Tester Retained */}
-        <div className="mt-12 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Site Theme Testing</h2>
-          <p className="text-gray-500 mb-4">Select a color below to instantly test how it looks as the background color on the site. This only changes the color for you locally.</p>
-          <div className="flex flex-wrap items-center gap-4">
-            <input 
-              type="color" 
-              value={testColor} 
-              onChange={handleColorChange} 
-              className="w-16 h-16 cursor-pointer border-0 rounded"
-            />
-            <input 
-              type="text" 
-              value={testColor} 
-              onChange={handleColorChange} 
-              placeholder="#F8F7F2"
-              className="font-mono text-gray-900 font-bold text-lg p-3 w-32 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-            <button 
-              onClick={() => {
-                setTestColor('#fff8e6');
-                document.body.style.backgroundColor = '#fff8e6';
-                localStorage.setItem("test_bg_color", '#fff8e6');
-              }}
-              className="border border-gray-300 text-gray-700 bg-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-50 transition"
-            >
-              Reset to Default
-            </button>
+        {/* Dynamic Theme Control Card */}
+        <div className="mt-10 bg-white p-6 sm:p-8 rounded-xl border border-gray-200 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Palette className="w-6 h-6 text-amber-600" />
+                <h2 className="text-2xl font-bold text-gray-900">Dynamic Site Background Theme</h2>
+              </div>
+              <p className="text-gray-500 text-sm mt-1">
+                Customize and publish the single background color globally across all live site visitors.
+              </p>
+            </div>
+
+            {/* Active Published Color Badge */}
+            <div className="flex items-center gap-3 bg-gray-50 p-2.5 px-4 rounded-lg border border-gray-200 self-start sm:self-auto">
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Active Published:</span>
+              <div className="flex items-center gap-2">
+                <span 
+                  className="w-5 h-5 rounded-full border border-gray-300 shadow-inner inline-block" 
+                  style={{ backgroundColor: activeGlobalColor }}
+                />
+                <code className="font-mono font-bold text-gray-800 text-sm uppercase">{activeGlobalColor}</code>
+              </div>
+            </div>
           </div>
+
+          {themeStatus && (
+            <div className={`p-4 mb-6 rounded-lg flex items-center gap-3 ${
+              themeStatus.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'
+            }`}>
+              {themeStatus.type === 'success' ? (
+                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+              )}
+              <p className="text-sm font-medium">{themeStatus.message}</p>
+            </div>
+          )}
+
+          {/* Preset Palettes */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Quick Preset Palettes
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+              {PRESET_COLORS.map((preset) => {
+                const isSelected = selectedColor.toLowerCase() === preset.hex.toLowerCase();
+                return (
+                  <button
+                    key={preset.hex}
+                    type="button"
+                    onClick={() => handlePreviewColor(preset.hex)}
+                    className={`flex flex-col items-center justify-between p-3 rounded-lg border text-left transition-all relative ${
+                      isSelected 
+                        ? 'border-blue-600 ring-2 ring-blue-500/20 bg-blue-50/20 shadow-sm' 
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div 
+                      className="w-full h-10 rounded border border-gray-200 shadow-inner mb-2 flex items-center justify-center"
+                      style={{ backgroundColor: preset.hex }}
+                    >
+                      {isSelected && (
+                        <Check className={`w-4 h-4 ${preset.textDark ? 'text-gray-900' : 'text-white'}`} />
+                      )}
+                    </div>
+                    <span className="text-xs font-semibold text-gray-700 text-center leading-tight truncate w-full">
+                      {preset.name}
+                    </span>
+                    <span className="text-[10px] font-mono text-gray-500 mt-1 uppercase">
+                      {preset.hex}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Custom Color Selector & Actions */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-gray-50 p-5 rounded-xl border border-gray-200">
+            
+            <div className="flex flex-wrap items-center gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">Color Picker</label>
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="color" 
+                    value={selectedColor} 
+                    onChange={(e) => handlePreviewColor(e.target.value)} 
+                    className="w-14 h-12 cursor-pointer border-0 rounded bg-transparent"
+                  />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-mono font-bold">#</span>
+                    <input 
+                      type="text" 
+                      value={selectedColor.replace('#', '')} 
+                      onChange={(e) => {
+                        const hex = `#${e.target.value.replace(/[^0-9A-Fa-f]/g, '').slice(0, 6)}`;
+                        handlePreviewColor(hex);
+                      }} 
+                      placeholder="FFF8E6"
+                      className="font-mono text-gray-900 font-bold text-base p-2.5 pl-7 w-32 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 outline-none uppercase"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {isUnsaved && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full border border-amber-200">
+                  <Globe className="w-3.5 h-3.5" />
+                  Previewing locally - click Save to publish live
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+              <button 
+                type="button"
+                onClick={() => {
+                  handlePreviewColor('#fff8e6');
+                  handleSaveTheme('#fff8e6');
+                }}
+                disabled={savingTheme}
+                className="border border-gray-300 text-gray-700 bg-white px-4 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+              >
+                <RotateCcw className="w-4 h-4" /> Reset Default (#fff8e6)
+              </button>
+
+              <button 
+                type="button"
+                onClick={() => handleSaveTheme()}
+                disabled={savingTheme}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-bold transition flex items-center justify-center gap-2 text-sm shadow-sm disabled:opacity-50"
+              >
+                {savingTheme ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                    Publishing...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    Save & Publish Live Background
+                  </>
+                )}
+              </button>
+            </div>
+
+          </div>
+
         </div>
 
       </div>

@@ -35,7 +35,6 @@ export default function HeroSection() {
     >
       {/* Animated gradient background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[#fff8e6]" />
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#1a3a52]/[0.04] rounded-full blur-[150px] animate-pulse-gold" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#2a5a8a]/[0.03] rounded-full blur-[120px] animate-pulse-gold" style={{ animationDelay: "2s" }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#1a3a52]/[0.02] rounded-full blur-[100px] animate-pulse-gold" style={{ animationDelay: "4s" }} />
@@ -132,7 +131,7 @@ export default function HeroSection() {
           >
             {[
               { value: "5,000+", label: "Students Trained" },
-              { value: "50+", label: "Expert Coaches" },
+              { value: "15+", label: "Expert Coaches" },
               { value: "8+", label: "Countries" },
               { value: "100+", label: "Tournament Wins" },
             ].map((stat) => (

@@ -37,13 +37,15 @@ export default function FloatingElements() {
       {/* Book a free demo floating button */}
       <a
         href="#demo"
-        className="fixed bottom-20 md:bottom-[7rem] right-4 md:right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-gold-dark to-gold flex items-center justify-center text-white shadow-lg shadow-gold/30 hover:shadow-gold/50 transition-all duration-300 hover:scale-110 active:scale-95 animate-[float_6s_ease-in-out_infinite_0.5s]"
+        className="fixed bottom-20 md:bottom-[7rem] right-4 md:right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-white shadow-lg shadow-gold/30 hover:shadow-gold/50 transition-all duration-300 hover:scale-110 active:scale-95 animate-[float_6s_ease-in-out_infinite_0.5s]"
         title="Book a Free Demo"
         aria-label="Book a Free Demo"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
+        <img
+          src="/book-now4.png"
+          alt="Book a Free Demo"
+          className="w-full h-full object-cover rounded-full scale-[1]"
+        />
         <span className="absolute inset-0 rounded-full bg-gold animate-ping opacity-20" />
       </a>
 
